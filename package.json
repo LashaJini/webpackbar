@@ -29,7 +29,8 @@
     "std-env": "^2.2.1",
     "text-table": "^0.2.0",
     "wrap-ansi": "^6.0.0",
-    "term-size": "^2.2.1"
+    "term-size": "^2.2.1",
+    "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",

@@ -14,6 +14,7 @@ var figures = require('figures');
 var ansiEscapes = _interopDefault(require('ansi-escapes'));
 var wrapAnsi = _interopDefault(require('wrap-ansi'));
 var terminalSize = _interopDefault(require('term-size'));
+var lodash_throttle = require('lodash.throttle');
 
 function first(arr) {
   return arr[0];
@@ -131,16 +132,17 @@ class LogUpdate {
   render(lines) {
     this.listen();
     let _lines = lines;
+    const columns = this.columns;
 
     if (!process.stdin.isTTY) {
       _lines = lines.trim();
 
-      if (_lines.length > this.columns - 25) {
-        _lines = _lines.substring(0, this.columns - 25 - BAR_LENGTH) + '…';
+      if (_lines.length > columns - 25) {
+        _lines = _lines.substring(0, columns - 25 - BAR_LENGTH) + '…';
       }
     }
 
-    const wrappedLines = wrapAnsi('\n' + _lines, this.columns, {
+    const wrappedLines = wrapAnsi('\n' + _lines, columns, {
       trim: false,
       hard: true,
       wordWrap: false
@@ -151,7 +153,7 @@ class LogUpdate {
   }
 
   get columns() {
-    return terminalSize().columns || 80;
+    return lodash_throttle.throttle(terminalSize, 500).columns || 80;
   }
 
   write(data) {

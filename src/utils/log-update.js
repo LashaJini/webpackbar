@@ -2,6 +2,7 @@ import ansiEscapes from 'ansi-escapes'
 import wrapAnsi from 'wrap-ansi'
 import terminalSize from 'term-size'
 import { BAR_LENGTH } from './consts'
+import { throttle } from 'lodash.throttle'
 
 // Based on https://github.com/sindresorhus/log-update/blob/master/index.js
 
@@ -20,15 +21,17 @@ export default class LogUpdate {
     this.listen()
     let _lines = lines
 
+    const columns = this.columns
+
     if (!process.stdin.isTTY) {
       _lines = lines.trim()
 
-      if (_lines.length > this.columns - 25) {
-        _lines = _lines.substring(0, this.columns - 25 - BAR_LENGTH) + '…'
+      if (_lines.length > columns - 25) {
+        _lines = _lines.substring(0, columns - 25 - BAR_LENGTH) + '…'
       }
     }
 
-    const wrappedLines = wrapAnsi('\n' + _lines, this.columns, {
+    const wrappedLines = wrapAnsi('\n' + _lines, columns, {
       trim: false,
       hard: true,
       wordWrap: false
@@ -46,7 +49,7 @@ export default class LogUpdate {
   }
 
   get columns () {
-    return (terminalSize().columns || 80)
+    return throttle(terminalSize, 500).columns || 80
   }
 
   write (data) {

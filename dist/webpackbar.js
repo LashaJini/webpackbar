@@ -55,7 +55,7 @@ function objectValues(obj) {
 }
 
 const nodeModules = `${path__default.delimiter}node_modules${path__default.delimiter}`;
-const BAR_LENGTH = 25;
+const BAR_LENGTH$1 = 10;
 const BLOCK_CHAR = '█';
 const BLOCK_CHAR2 = '█';
 const NEXT = ' ' + chalk.blue(figures.pointerSmall) + ' ';
@@ -73,10 +73,10 @@ const colorize = color => {
   return chalk[color] || chalk.keyword(color);
 };
 const renderBar = (progress, color) => {
-  const w = progress * (BAR_LENGTH / 100);
+  const w = progress * (BAR_LENGTH$1 / 100);
   const bg = chalk.white(BLOCK_CHAR);
   const fg = colorize(color)(BLOCK_CHAR2);
-  return range(BAR_LENGTH).map(i => i < w ? fg : bg).join('');
+  return range(BAR_LENGTH$1).map(i => i < w ? fg : bg).join('');
 };
 function createTable(data) {
   return textTable(data, {
@@ -118,10 +118,7 @@ function hook(compiler, hookName, fn) {
   }
 }
 
-const originalWrite = Symbol('webpackbarWrite'); // TODO: we want fancy progress bar in lerna as well.
-// Remove unnecessary new lines
-
-const MARGIN = process.stdin.isTTY ? 0 : 2;
+const originalWrite = Symbol('webpackbarWrite');
 class LogUpdate {
   constructor() {
     this.prevLineCount = 0;
@@ -133,18 +130,28 @@ class LogUpdate {
 
   render(lines) {
     this.listen();
-    const wrappedLines = wrapAnsi(lines, this.columns, {
+    let _lines = lines;
+
+    if (!process.stdin.isTTY) {
+      _lines = lines.trim();
+
+      if (_lines.length > this.columns - 25) {
+        _lines = _lines.substring(0, this.columns - 25 - BAR_LENGTH) + '…';
+      }
+    }
+
+    const wrappedLines = wrapAnsi('\n' + _lines, this.columns, {
       trim: false,
       hard: true,
       wordWrap: false
     });
     const data = ansiEscapes.eraseLines(this.prevLineCount) + wrappedLines + '\n' + this.extraLines;
     this.write(data);
-    this.prevLineCount = data.split('\n').length - MARGIN;
+    this.prevLineCount = data.split('\n').length;
   }
 
   get columns() {
-    return (terminalSize().columns || 80) - 2;
+    return terminalSize().columns || 80;
   }
 
   write(data) {
@@ -532,7 +539,9 @@ const DEFAULT_STATE = {
 const globalStates = {};
 class WebpackBarPlugin extends webpack.ProgressPlugin {
   constructor(options) {
-    super();
+    super({
+      entries: false
+    });
     this.options = Object.assign({}, DEFAULTS, options); // Assign a better handler to base ProgressPlugin
 
     this.handler = (percent, message, ...details) => {

@@ -31,7 +31,7 @@ const globalStates = {}
 
 export default class WebpackBarPlugin extends ProgressPlugin {
   constructor (options) {
-    super()
+    super({ entries: false })
 
     this.options = Object.assign({}, DEFAULTS, options)
 

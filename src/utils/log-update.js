@@ -6,10 +6,6 @@ import terminalSize from 'term-size'
 
 const originalWrite = Symbol('webpackbarWrite')
 
-// TODO: we want fancy progress bar in lerna as well.
-// Remove unnecessary new lines
-const MARGIN = process.stdin.isTTY ? 0 : 2
-
 export default class LogUpdate {
   constructor () {
     this.prevLineCount = 0
@@ -21,8 +17,17 @@ export default class LogUpdate {
 
   render (lines) {
     this.listen()
+    let _lines = lines
 
-    const wrappedLines = wrapAnsi(lines, this.columns, {
+    if (!process.stdin.isTTY) {
+      _lines = lines.trim()
+
+      if (_lines.length > this.columns - 25) {
+        _lines = _lines.substring(0, this.columns - 25 - BAR_LENGTH) + '…'
+      }
+    }
+
+    const wrappedLines = wrapAnsi('\n' + _lines, this.columns, {
       trim: false,
       hard: true,
       wordWrap: false
@@ -36,11 +41,11 @@ export default class LogUpdate {
 
     this.write(data)
 
-    this.prevLineCount = data.split('\n').length - MARGIN
+    this.prevLineCount = data.split('\n').length
   }
 
   get columns () {
-    return (terminalSize().columns || 80) - 2
+    return (terminalSize().columns || 80)
   }
 
   write (data) {

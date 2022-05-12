@@ -1,6 +1,7 @@
 import ansiEscapes from 'ansi-escapes'
 import wrapAnsi from 'wrap-ansi'
 import terminalSize from 'term-size'
+import { BAR_LENGTH } from './consts'
 
 // Based on https://github.com/sindresorhus/log-update/blob/master/index.js
 

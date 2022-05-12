@@ -55,7 +55,7 @@ function objectValues(obj) {
 }
 
 const nodeModules = `${path__default.delimiter}node_modules${path__default.delimiter}`;
-const BAR_LENGTH$1 = 10;
+const BAR_LENGTH = 10;
 const BLOCK_CHAR = '█';
 const BLOCK_CHAR2 = '█';
 const NEXT = ' ' + chalk.blue(figures.pointerSmall) + ' ';
@@ -73,10 +73,10 @@ const colorize = color => {
   return chalk[color] || chalk.keyword(color);
 };
 const renderBar = (progress, color) => {
-  const w = progress * (BAR_LENGTH$1 / 100);
+  const w = progress * (BAR_LENGTH / 100);
   const bg = chalk.white(BLOCK_CHAR);
   const fg = colorize(color)(BLOCK_CHAR2);
-  return range(BAR_LENGTH$1).map(i => i < w ? fg : bg).join('');
+  return range(BAR_LENGTH).map(i => i < w ? fg : bg).join('');
 };
 function createTable(data) {
   return textTable(data, {

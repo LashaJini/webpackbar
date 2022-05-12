@@ -117,7 +117,10 @@ function hook(compiler, hookName, fn) {
   }
 }
 
-const originalWrite = Symbol('webpackbarWrite');
+const originalWrite = Symbol('webpackbarWrite'); // TODO: we want fancy progress bar in lerna as well.
+// Remove unnecessary new lines
+
+const MARGIN = process.stdin.isTTY ? 0 : 2;
 class LogUpdate {
   constructor() {
     this.prevLineCount = 0;
@@ -136,7 +139,7 @@ class LogUpdate {
     });
     const data = ansiEscapes.eraseLines(this.prevLineCount) + wrappedLines + '\n' + this.extraLines;
     this.write(data);
-    this.prevLineCount = data.split('\n').length;
+    this.prevLineCount = data.split('\n').length - MARGIN;
   }
 
   get columns() {

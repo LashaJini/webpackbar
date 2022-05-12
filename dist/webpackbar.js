@@ -56,7 +56,7 @@ function objectValues(obj) {
 
 const nodeModules = `${path__default.delimiter}node_modules${path__default.delimiter}`;
 const BAR_LENGTH = 10;
-const BLOCK_CHAR = '█';
+const BLOCK_CHAR = process.stdin.isTTY ? '█' : '*';
 const BLOCK_CHAR2 = '█';
 const NEXT = ' ' + chalk.blue(figures.pointerSmall) + ' ';
 const BULLET = figures.bullet;

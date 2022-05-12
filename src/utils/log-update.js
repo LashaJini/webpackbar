@@ -1,9 +1,11 @@
 import ansiEscapes from 'ansi-escapes'
 import wrapAnsi from 'wrap-ansi'
+import terminalSize from 'term-size'
 
 // Based on https://github.com/sindresorhus/log-update/blob/master/index.js
 
 const originalWrite = Symbol('webpackbarWrite')
+
 // TODO: we want fancy progress bar in lerna as well.
 // Remove unnecessary new lines
 const MARGIN = process.stdin.isTTY ? 0 : 2
@@ -38,7 +40,7 @@ export default class LogUpdate {
   }
 
   get columns () {
-    return (process.stderr.columns || 80) - 2
+    return (terminalSize().columns || 80) - 2
   }
 
   write (data) {

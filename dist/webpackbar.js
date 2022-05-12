@@ -13,6 +13,7 @@ var textTable = _interopDefault(require('text-table'));
 var figures = require('figures');
 var ansiEscapes = _interopDefault(require('ansi-escapes'));
 var wrapAnsi = _interopDefault(require('wrap-ansi'));
+var terminalSize = _interopDefault(require('term-size'));
 
 function first(arr) {
   return arr[0];
@@ -143,7 +144,7 @@ class LogUpdate {
   }
 
   get columns() {
-    return (process.stderr.columns || 80) - 2;
+    return (terminalSize().columns || 80) - 2;
   }
 
   write(data) {

@@ -4,6 +4,9 @@ import wrapAnsi from 'wrap-ansi'
 // Based on https://github.com/sindresorhus/log-update/blob/master/index.js
 
 const originalWrite = Symbol('webpackbarWrite')
+// TODO: we want fancy progress bar in lerna as well.
+// Remove unnecessary new lines
+const MARGIN = process.stdin.isTTY ? 0 : 2
 
 export default class LogUpdate {
   constructor () {
@@ -31,7 +34,7 @@ export default class LogUpdate {
 
     this.write(data)
 
-    this.prevLineCount = data.split('\n').length
+    this.prevLineCount = data.split('\n').length - MARGIN
   }
 
   get columns () {

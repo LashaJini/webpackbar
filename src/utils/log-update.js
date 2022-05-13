@@ -1,7 +1,7 @@
 import ansiEscapes from 'ansi-escapes'
 import wrapAnsi from 'wrap-ansi'
-import terminalSize from 'term-size'
-import debounce from 'lodash.debounce'
+// import terminalSize from 'term-size'
+// import debounce from 'lodash.debounce'
 import { BAR_LENGTH } from './consts'
 
 // Based on https://github.com/sindresorhus/log-update/blob/master/index.js
@@ -49,7 +49,9 @@ export default class LogUpdate {
   }
 
   get columns () {
-    return debounce(terminalSize, 500)().columns || 80
+    // TODO: terminalSize is slow. Do something about it
+    // return debounce(terminalSize, 500)().columns || 80
+    return 80
   }
 
   write (data) {

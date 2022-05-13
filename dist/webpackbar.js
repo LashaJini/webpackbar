@@ -14,7 +14,7 @@ var figures = require('figures');
 var ansiEscapes = _interopDefault(require('ansi-escapes'));
 var wrapAnsi = _interopDefault(require('wrap-ansi'));
 var terminalSize = _interopDefault(require('term-size'));
-var lodash_throttle = require('lodash.throttle');
+var debounce = _interopDefault(require('lodash.debounce'));
 
 function first(arr) {
   return arr[0];
@@ -153,7 +153,7 @@ class LogUpdate {
   }
 
   get columns() {
-    return lodash_throttle.throttle(terminalSize, 500).columns || 80;
+    return debounce(terminalSize, 500)().columns || 80;
   }
 
   write(data) {

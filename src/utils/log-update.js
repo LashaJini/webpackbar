@@ -1,8 +1,8 @@
 import ansiEscapes from 'ansi-escapes'
 import wrapAnsi from 'wrap-ansi'
 import terminalSize from 'term-size'
+import debounce from 'lodash.debounce'
 import { BAR_LENGTH } from './consts'
-import { throttle } from 'lodash.throttle'
 
 // Based on https://github.com/sindresorhus/log-update/blob/master/index.js
 
@@ -49,7 +49,7 @@ export default class LogUpdate {
   }
 
   get columns () {
-    return throttle(terminalSize, 500).columns || 80
+    return debounce(terminalSize, 500)().columns || 80
   }
 
   write (data) {

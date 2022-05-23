@@ -13,6 +13,7 @@ var textTable = _interopDefault(require('text-table'));
 var figures = require('figures');
 var ansiEscapes = _interopDefault(require('ansi-escapes'));
 var wrapAnsi = _interopDefault(require('wrap-ansi'));
+var terminalSize = _interopDefault(require('term-size'));
 
 function first(arr) {
   return arr[0];
@@ -153,7 +154,7 @@ class LogUpdate {
   get columns() {
     // TODO: terminalSize is slow. Do something about it
     // return debounce(terminalSize, 500)().columns || 80
-    return 80;
+    return terminalSize().columns || 80;
   }
 
   write(data) {
